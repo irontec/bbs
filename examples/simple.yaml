@@ -1,0 +1,24 @@
+# simple.yaml
+#
+# Simple scenario for testing a call between alice and bob
+# Bob must have the extension 1001 assigned
+#
+scenarios:
+  - name: call from alice to bob
+    timeout: 20
+    sessions:
+
+      - call_uac_alice:
+          - credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
+          - wait
+          - call: 1001
+          - waitfor: CONFIRMED
+          - wait: 2
+          - hangup
+
+      - call_uas_bob:
+          - register: [ "bob", "b0bp4ssw0rd", "sip.domain.com" ]
+          - waitfor: INCOMING
+          - answer
+          - waitfor: DISCONNCTD
+          - unregister

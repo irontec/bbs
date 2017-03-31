@@ -1,0 +1,39 @@
+# pickup.yaml
+#
+# Simple scenario for testing a call pickup
+# Bob must have the extension 1001 assigned
+# Pickup service must be configured with *7
+#
+scenarios:
+  - name: call from alice to bob picked up by charlie
+    timeout: 20
+    sessions:
+    
+      - caller_alice:
+          - credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
+          - wait
+          - log: I wonder how bob is doing
+          - call: 1001
+          - waitfor: CONFIRMED
+          - log: Call has been answered, but you're not bob! Wazzap Charlie!
+          - wait: 3
+          - hangup
+          - waitfor: DISCONNCTD
+          
+          
+      - callee_bob:
+          - register: [ "bob", "b0bp4ssw0rd", "sip.domain.com" ]
+          - waitfor: INCOMING
+          - log: That's sound is my phone!
+          - waitfor: DISCONNCTD
+          - log: My call is no longer ringing... it was picked up elsewhere.
+          - unregister
+          
+          
+      - pickuper_charlie:
+          - credentials: [ "charlie", "ch4rl1e4ssw0rd", "sip.domain.com" ]
+          - wait: 5
+          - log: Bob's ringing, I'll try to pickup his call.
+          - call: '*7'
+          - waitfor: CONFIRMED
+          - waitfor: DISCONNCTD

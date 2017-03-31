@@ -1,0 +1,73 @@
+# -----------------------------------------------------------------------------
+voicemail_test: &voicemail_test
+  - name: call from alice to voicemail
+    type: simple
+    timeout: 30
+    sessions:
+      - voicemail_test_uac:
+          - credentials:
+              <<: *alice_cred
+          - call: "*98"
+          - waitfor: CONFIRMED
+          - wait: 20
+          - dtmf: "#"
+          - waitfor: DISCONNCTD
+
+# -----------------------------------------------------------------------------
+simple_call_test: &simple_call_test
+  - name: call from alice to bob
+    type: parallel
+    timeout: 20
+    sessions:
+      - call_uac_alice:
+          - credentials:
+              <<: *alice_cred
+          - wait
+          - call: 1001
+          - waitfor: CONFIRMED
+          - wait: 2
+          - hangup
+      - call_uas_bob:
+          - register:
+              <<: *bob_cred
+          - waitfor: INCOMING
+          - answer
+          - waitfor: DISCONNCTD
+          - unregister
+
+# -----------------------------------------------------------------------------
+simple_call_ivr: &simple_call_ivr
+  - name: call from bob to alice using ivr
+    type: simple
+    timeout: 20
+    sessions:
+      - ivr_uac_bob:
+          - credentials:
+              <<: *bob_cred
+          - call: 600             # IVR common extension
+          - waitfor: CONFIRMED
+          - wait: 3
+          - dtmf: "1"
+          - wait: 0.6
+          - dtmf: "0"
+          - wait: 0.6
+          - dtmf: "0"
+          - wait: 0.6
+          - dtmf: "0"
+          - waitfor: DISCONNCTD
+      - ivr_uas_alice:
+          - register:
+              <<: *alice_cred
+          - waitfor: INCOMING
+          - answer
+          - waitfor: CONFIRMED
+          - wait
+          - hangup
+          - unregister
+
+
+# =============================================================================
+scenarios:
+  - <<: *voicemail_test
+  - <<: *simple_call_ivr
+  - <<: *simple_call_test

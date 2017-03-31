@@ -1,0 +1,13 @@
+# wait.yaml
+#
+# Simple scenario for testing bbs
+#
+scenarios:
+  - name: Wait for me Mr. Postman
+    timeout: 5
+    sessions:
+      - dummy:
+          - wait
+          - wait: 2
+          - wait
+          - call: 1

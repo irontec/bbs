@@ -1,0 +1,43 @@
+# simple.yaml
+#
+# Simple scenario for testing a call between alice and bob
+# Bob must have the extension 1001 assigned
+#
+# This scenario shows how to label a call and make other steps for that specific call
+#
+scenarios:
+  - name: call from alice to bob and charlie
+    timeout: 20
+    sessions:
+    
+      - call_uac_alice:
+          - credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
+          - call: { name: CALL_BOB, number: 1001 }
+          - waitfor: { call: CALL_BOB, name: CONFIRMED }
+          - call:
+              name: CALL_CHARLIE
+              number: 1002
+          - waitfor: { call: CALL_CHARLIE, name: CONFIRMED }
+          - log: As soon as charlie hangups, hangup bob!
+          - waitfor:
+              call: CALL_CHARLIE
+              name: DISCONNCTD
+          - hangup: CALL_BOB
+              
+
+      - call_uas_bob:
+          - register: [ "bob", "b0bp4ssw0rd", "sip.domain.com" ]
+          - waitfor: INCOMING
+          - answer
+          - waitfor: DISCONNCTD
+          - unregister
+
+      - call_uas_charlie:
+          - register: [ "charlie", "ch4rl1e4ssw0rd", "sip.domain.com" ]
+          - waitfor: INCOMING
+          - answer
+          - wait: 5
+          - hangup
+          - waitfor: DISCONNCTD
+          - unregister
+          

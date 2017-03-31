@@ -1,0 +1,15 @@
+users:
+  - alice: &alice_cred
+      username: alice
+      password: gDbCV8s1*8
+      domain: sip.domain.com
+
+  - bob: &bob_cred
+      username: bob
+      password: b0bp4ssw0rd
+      domain: sip.domain.com
+
+  - charlie: &charlie_cred
+      username: charlie
+      password: ch4rl1e4ssw0rd
+      domain: sip.domain.com

@@ -1,0 +1,35 @@
+# pickup.yaml
+#
+# Simple scenario for testing a call pickup
+# Bob must have the extension 1001 assigned
+# Pickup service must be configured with *7
+#
+scenarios:
+  - name: call from alice to bob picked up by charlie
+    timeout: 20
+    sessions:
+
+      - caller_alice:
+          - credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
+          - call: 1001
+          - waitfor: CONFIRMED
+          - waitfor: DISCONNCTD
+
+      - callee_bob:
+          - register: [ "bob", "b0bp4ssw0rd", "sip.domain.com" ]
+          - waitfor: INCOMING
+          - answer
+          - wait
+          - blindxfer: 1002
+          - waitfor: TRANSFER_ACCEPTED
+          - waitfor: TRANSFER_OK
+          - unregister
+
+      - callee_charlie:
+          - register: [ "charlie", "ch4rl1e4ssw0rd", "sip.domain.com" ]
+          - waitfor: INCOMING
+          - answer
+          - waitfor: CONFIRMED
+          - wait: 3
+          - hangup
+          - waitfor: DISCONNCTD
