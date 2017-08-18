@@ -28,18 +28,18 @@ class BlindXferStep(Step):
 
     def set_params(self, params):
 
-        if type(params) is str:
+        if isinstance(params, str):
             self.number = params
 
-        if type(params) is int:
+        if isinstance(params, int):
             self.number = str(params)
 
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.number = str(params['number'])
             if 'call' in params:
                 self.call = params['call']
 
-        if type(params) is list:
+        if isinstance(params, list):
             self.call = params.pop(0)
             self.number = params.pop(0)
 

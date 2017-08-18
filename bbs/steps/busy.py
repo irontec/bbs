@@ -25,9 +25,9 @@ class BusyStep(Step):
         self.name = None
 
     def set_params(self, params):
-        if type(params) is str:
+        if isinstance(params, str):
             self.name = params
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.name = params['name']
 
     def run(self):

@@ -25,9 +25,9 @@ class HangupStep(Step):
         self.call = None
 
     def set_params(self, params):
-        if type(params) is str:
+        if isinstance(params, str):
             self.call = params
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.call = params['call']
 
     def run(self):

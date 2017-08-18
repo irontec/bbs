@@ -26,10 +26,10 @@ class WaitforStep(Step):
 
     def set_params(self, params):
 
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.event = params
 
-        if type(params) is str:
+        if isinstance(params, str):
             self.event = { "name": params }
 
     def run(self):

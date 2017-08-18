@@ -29,14 +29,14 @@ class DtmfStep(Step):
 
     def set_params(self, params):
 
-        if type(params) is str:
+        if isinstance(params, str):
             self.digit = params
-        if type(params) is int:
+        if isinstance(params, int):
             self.digit = str(params)
-        if type(params) is list:
+        if isinstance(params, list):
             self.call = params.pop(0)
             self.digit = str(params.pop(0))
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.name = str(params['call'])
             self.digit = str(params['digit'])
 

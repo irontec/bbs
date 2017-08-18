@@ -30,10 +30,10 @@ class WaitStep(Step):
         if not params:
             return
 
-        if type(params) is int:
+        if isinstance(params, int):
             self.stime = params
 
-        if type(params) is dict:
+        if isinstance(params, dict):
             if 'time' in params.keys():
                 self.stime = params['time']
 

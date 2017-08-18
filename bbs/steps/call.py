@@ -30,21 +30,21 @@ class CallStep(Step):
 
     def set_params(self, params):
 
-        if type(params) is str:
+        if isinstance(params, str):
             if '@' in params:
                 self.uri = params
             else:
                 self.number = params
 
-        if type(params) is int:
+        if isinstance(params, int):
             self.number = str(params)
 
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.number = str(params['number'])
             if 'name' in params:
                 self.name = params['name']
 
-        if type(params) is list:
+        if isinstance(params, list):
             self.name = params.pop(0)
             self.number = params.pop(0)
 

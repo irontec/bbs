@@ -28,12 +28,12 @@ class CredentialsStep(Step, AccountCallback):
 
     def set_params(self, params):
 
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.username = params['username']
             self.password = params['password']
             self.domain = params['domain']
 
-        if type(params) is list:
+        if isinstance(params, list):
             self.username = params.pop(0)
             self.password = params.pop(0)
             self.domain = params.pop(0)

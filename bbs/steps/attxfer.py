@@ -26,15 +26,15 @@ class AttXferStep(Step):
 
     def set_params(self, params):
 
-        if type(params) is str:
+        if isinstance(params, str):
             self.target = params
 
-        if type(params) is dict:
+        if isinstance(params, dict):
             self.target = params['target']
             if 'call' in params:
                 self.call = params['call']
 
-        if type(params) is list:
+        if isinstance(params, list):
             self.call = params.pop(0)
             self.target = params.pop(0)
 

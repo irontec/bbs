@@ -111,10 +111,10 @@ class Scenario(object):
             # Add steps to the session
             for step_conf in session_steps:
 
-                if type(step_conf) is str:
+                if isinstance(step_conf, str):
                     (name, params) = (step_conf, None)
 
-                if type(step_conf) is dict:
+                if isinstance(step_conf, dict):
                     (name, params) = step_conf.popitem()
 
                 # Get step type from the name
