@@ -26,11 +26,15 @@ class CallStep(Step):
         Step.__init__(self)
         self.number = None
         self.name = None
+        self.uri = None
 
     def set_params(self, params):
 
         if type(params) is str:
-            self.number = params
+            if '@' in params:
+                self.uri = params
+            else:
+                self.number = params
 
         if type(params) is int:
             self.number = str(params)
@@ -45,12 +49,14 @@ class CallStep(Step):
             self.number = params.pop(0)
 
     def run(self):
-        self.log("-- [%s] Running %s to number %s" % (self.session.name, self.__class__.__name__, self.number))
         try:
-            reg_uri = SIPUri(self.session.account.info().uri)
-
-            # Build the called URI
-            desturi = "%s:%s@%s" % (reg_uri.scheme, self.number, reg_uri.host)
+            if self.uri:
+                self.log("-- [%s] Running %s to uri %s" % (self.session.name, self.__class__.__name__, self.uri))
+                desturi=self.uri
+            else:
+                self.log("-- [%s] Running %s to number %s" % (self.session.name, self.__class__.__name__, self.number))
+                reg_uri = SIPUri(self.session.account.info().uri)
+                desturi = "%s:%s@%s" % (reg_uri.scheme, self.number, reg_uri.host)
 
             # Get a new manager to handle events on this call
             manager = self.session.get_manager(self.name)
