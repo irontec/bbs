@@ -17,7 +17,7 @@
 
 import time
 
-from step import Step
+from bbs.steps.step import Step
 
 
 class WaitStep(Step):

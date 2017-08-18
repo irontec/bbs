@@ -16,8 +16,8 @@
 #
 
 from pjsua import SIPUri
-from ..pjlib import PJLib
-from step import Step
+from bbs.pjlib import PJLib
+from bbs.steps.step import Step
 
 
 class CallStep(Step):
@@ -68,4 +68,3 @@ class CallStep(Step):
             self.succeeded()
         except:
             self.failed()
-

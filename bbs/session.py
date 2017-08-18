@@ -20,7 +20,7 @@ from threading import Thread
 from clint.textui import colored
 from pjsua import Lib
 
-from manager import CallManager
+from bbs.manager import CallManager
 
 
 class Session(object):
@@ -38,7 +38,7 @@ class Session(object):
         self.thread = None
 
     def __repr__(self, *args, **kwargs):
-        return 'Session(' + repr(self.name) + ', ' + repr(self.steps) + ')';
+        return 'Session(' + repr(self.name) + ', ' + repr(self.steps) + ')'
 
     def add_step(self, step):
         step.set_session(self)
@@ -102,7 +102,7 @@ class Session(object):
                 return False
 
         self.log(colored.green("+++ [%s] %d/%d steps completed successfully   +++"
-                            % (self.name, len(self.steps), len(self.steps))))
+                               % (self.name, len(self.steps), len(self.steps))))
 
         if self.account != None:
             self.account.delete()
@@ -111,5 +111,3 @@ class Session(object):
         self.thread = Thread(target=self.run, args=())
         self.thread.daemon = True
         self.thread.start()
-
-

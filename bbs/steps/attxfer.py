@@ -15,8 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from step import Step
-
+from bbs.steps.step import Step
 
 class AttXferStep(Step):
 
@@ -51,4 +50,3 @@ class AttXferStep(Step):
             self.succeeded()
         else:
             self.failed()
-

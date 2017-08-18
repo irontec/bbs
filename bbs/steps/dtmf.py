@@ -17,7 +17,7 @@
 
 import pjsua
 
-from step import Step
+from bbs.steps.step import Step
 
 
 class DtmfStep(Step):

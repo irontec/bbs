@@ -37,13 +37,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from optparse import OptionParser
-import sys, os
+import sys
 
-from conf import ConfigParser
-from junit.writer import JUnitWriter
-from pjlib import PJLib
-from scenario import Scenario
-from settings import Settings
+from bbs.conf import ConfigParser
+from bbs.junit.writer import JUnitWriter
+from bbs.pjlib import PJLib
+from bbs.scenario import Scenario
+from bbs.settings import Settings
 
 
 def main(argv=None):
@@ -121,4 +121,3 @@ def main(argv=None):
         junit.save(opts.output, scenarios)
 
     return 0
-

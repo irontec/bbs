@@ -17,7 +17,7 @@
 
 from clint.textui import colored
 
-from step import Step
+from bbs.steps.step import Step
 
 
 class LogStep(Step):

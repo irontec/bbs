@@ -16,10 +16,8 @@
 #
 
 from pjsua import Lib, AccountConfig, AccountCallback
-
-from step import Step
-
-from ..pjlib import PJLib
+from bbs.steps.step import Step
+from bbs.pjlib import PJLib
 
 
 class CredentialsStep(Step, AccountCallback):
@@ -52,6 +50,3 @@ class CredentialsStep(Step, AccountCallback):
         # We don't register, so there's no way to check if credentials are
         # correct at this point
         self.succeeded()
-
-
-

@@ -20,9 +20,9 @@ import time
 
 from clint.textui import colored
 
-from builder import StepBuilder
-from session import Session
-from settings import Settings
+from bbs.builder import StepBuilder
+from bbs.session import Session
+from bbs.settings import Settings
 
 
 class Scenario(object):

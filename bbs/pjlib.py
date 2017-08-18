@@ -17,7 +17,7 @@
 
 import pjsua
 
-from settings import Settings
+from bbs.settings import Settings
 
 
 class PJLib(object):

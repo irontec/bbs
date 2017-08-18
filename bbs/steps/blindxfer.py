@@ -16,8 +16,7 @@
 #
 
 from pjsua import SIPUri
-
-from step import Step
+from bbs.steps.step import Step
 
 
 class BlindXferStep(Step):
@@ -59,4 +58,3 @@ class BlindXferStep(Step):
             self.succeeded()
         else:
             self.failed()
-
