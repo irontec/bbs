@@ -15,9 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from pjsua import Lib, AccountConfig, AccountCallback
-
-from credentials import CredentialsStep
+import re
+from pjsua import Lib, AccountConfig, AccountCallback, SIPUri
+from bbs.steps.credentials import CredentialsStep
 
 
 class RegisterStep(CredentialsStep, AccountCallback):
@@ -31,16 +31,19 @@ class RegisterStep(CredentialsStep, AccountCallback):
         # Check if register has succeeded
         self.success = self.account.info().reg_status == 200
 
-    def on_incoming_call(self, call):
+    def on_incoming_call2(self, call, rdata):
+        # Let the manager handle this call events
         manager = self.session.get_manager()
         call.set_callback(manager)
+        call.pai = None
         manager.on_state()
+        # Get callerid.num from incoming call
+        match = re.search("P-Asserted-Identity:[^\n]*<(.*)>\r\n", str(rdata.msg_info_buffer))
+        if match:
+            call.pai = SIPUri(match.group(1))
 
     def run(self):
         self.log("-- [%s] Running %s " % (self.session.name, self.__class__.__name__))
         acc_cfg = AccountConfig(self.domain, self.username, self.password)
         self.session.account = Lib.instance().create_account(acc_cfg, False, self)
         self.wait_status()
-
-
-

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from steps import *
+from bbs.steps import *
 
 
 class StepBuilder(object):
@@ -46,6 +46,8 @@ class StepBuilder(object):
             return hangup.HangupStep()
         if name == "busy":
             return busy.BusyStep()
+        if name == "callid":
+            return callid.CallidStep()
         if name == "blindxfer":
             return blindxfer.BlindXferStep()
         if name == "attxfer":
