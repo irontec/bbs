@@ -59,10 +59,16 @@ class PJLib(object):
         try:
             # Get log level from command line
             log_level = Settings.instance().verbose
+            nameserver = Settings.instance().nameserver
+            if nameserver:
+                ua_cfg = pjsua.UAConfig()
+                ua_cfg.nameserver = Settings.instance().nameserver
+            else:
+                ua_cfg = None
 
             # Initializa PJSUA
             self.lib = pjsua.Lib()
-            self.lib.init(log_cfg=pjsua.LogConfig(level=log_level, callback=self.pjlog_cb))
+            self.lib.init(log_cfg=pjsua.LogConfig(level=log_level, callback=self.pjlog_cb), ua_cfg=ua_cfg)
             self.transport = self.lib.create_transport(pjsua.TransportType.UDP)
             self.default_account = self.lib.create_account_for_transport(self.transport)
             self.lib.set_null_snd_dev()

@@ -71,6 +71,8 @@ def main(argv=None):
                       help="read configuration from file", metavar="FILE")
     parser.add_option("-e", "--env", dest="env",
                       help="read environment data from file", metavar="FILE")
+    parser.add_option("-n", "--nameserver", dest="nameserver", action="append",
+                      help="Add the specified nameserver to enable SRV resolution", metavar="NS")
     parser.add_option("-o", "--output", dest="output",
                       help="output JUnit xml file", metavar="FILE")
     parser.add_option("-k", "--keepon", dest="keepon", default=False, action="store_true",
@@ -90,6 +92,7 @@ def main(argv=None):
 
     settings = Settings.instance()
     settings.verbose = opts.verbose
+    settings.nameserver = opts.nameserver
     settings.keepon = opts.keepon
 
     # Parse configuration scenarios

@@ -37,6 +37,7 @@ class Settings(object):
 
     def __init__(self):
         self.verbose = 0
+        self.nameserver = None
         self.keepon = False
 
     @staticmethod
