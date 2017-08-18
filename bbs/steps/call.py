@@ -27,6 +27,8 @@ class CallStep(Step):
         self.number = None
         self.name = None
         self.uri = None
+        self.callidnum = None
+        self.hdrs = []
 
     def set_params(self, params):
 
@@ -40,7 +42,12 @@ class CallStep(Step):
             self.number = str(params)
 
         if isinstance(params, dict):
-            self.number = str(params['number'])
+            if 'number' in params:
+                self.number = str(params['number'])
+            if 'uri' in params:
+                self.uri = str(params['uri'])
+            if 'callidnum' in params:
+                self.callidnum = str(params['callidnum'])
             if 'name' in params:
                 self.name = params['name']
 
@@ -50,21 +57,30 @@ class CallStep(Step):
 
     def run(self):
         try:
+            # If not account is set, use default one
+            if not self.session.account:
+                self.session.account = PJLib.instance().get_default_account()
+
             if self.uri:
-                self.log("-- [%s] Running %s to uri %s" % (self.session.name, self.__class__.__name__, self.uri))
-                desturi=self.uri
+                self.log("-- [%s] Running %s to uri %s"
+                         % (self.session.name, self.__class__.__name__, self.uri))
+                desturi = self.uri
             else:
-                self.log("-- [%s] Running %s to number %s" % (self.session.name, self.__class__.__name__, self.number))
+                self.log("-- [%s] Running %s to number %s"
+                         % (self.session.name, self.__class__.__name__, self.number))
                 reg_uri = SIPUri(self.session.account.info().uri)
                 desturi = "%s:%s@%s" % (reg_uri.scheme, self.number, reg_uri.host)
 
             # Get a new manager to handle events on this call
             manager = self.session.get_manager(self.name)
 
-            # Make the call
-            if not self.session.account:
-                self.session.account = PJLib.instance().get_default_account()
-            self.session.account.make_call(desturi, manager)
+            if self.callidnum:
+                reg_uri = SIPUri(self.session.account.info().uri)
+                pai_hdr = ("P-Asserted-Identity", "<%s:%s@%s>"
+                           % (reg_uri.scheme, self.callidnum, reg_uri.host))
+                self.hdrs.append(pai_hdr)
+
+            self.session.account.make_call(desturi, manager, self.hdrs)
             self.succeeded()
         except:
             self.failed()
