@@ -64,6 +64,7 @@ class PJLib(object):
             self.lib = pjsua.Lib()
             self.lib.init(log_cfg=pjsua.LogConfig(level=log_level, callback=self.pjlog_cb))
             self.transport = self.lib.create_transport(pjsua.TransportType.UDP)
+            self.default_account = self.lib.create_account_for_transport(self.transport)
             self.lib.set_null_snd_dev()
             self.lib.start()
         except pjsua.Error, e:
@@ -82,3 +83,6 @@ class PJLib(object):
     def pjlog_cb(self, level, str, len):
         """Generic Log callbac for PJSUA library"""
         print str,
+
+    def get_default_account(self):
+        return self.default_account

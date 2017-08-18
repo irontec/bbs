@@ -16,7 +16,7 @@
 #
 
 from pjsua import SIPUri
-
+from ..pjlib import PJLib
 from step import Step
 
 
@@ -56,6 +56,8 @@ class CallStep(Step):
             manager = self.session.get_manager(self.name)
 
             # Make the call
+            if not self.session.account:
+                self.session.account = PJLib.instance().get_default_account()
             self.session.account.make_call(desturi, manager)
             self.succeeded()
         except:
