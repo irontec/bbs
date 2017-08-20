@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from optparse import OptionParser
+from argparse import ArgumentParser
 import sys
 
 from bbs.conf import ConfigParser
@@ -52,8 +52,8 @@ def main(argv=None):
     program_version = "v%s" % __version__
     program_build_date = "%s" % __updated__
 
-    program_version_string = '%%prog %s (%s)' % (program_version, program_build_date)
     program_longdesc = '''BBlack Box SIP Tester'''
+    program_version_string = '%s %s (%s)' % (program_longdesc, program_version, program_build_date)
     program_license = '''License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 
     This is free software: you are free to change and redistribute it.
@@ -64,36 +64,37 @@ def main(argv=None):
         argv = sys.argv[1:]
 
     # setup option parser
-    parser = OptionParser(version=program_version_string, epilog=program_longdesc, description=program_license)
-    parser.add_option("-v", "--verbose", dest="verbose", default=0, action="count",
-                      help="set verbosity level [default: %default]")
-    parser.add_option("-c", "--config", dest="config",
+    parser = ArgumentParser(description=program_longdesc, epilog=program_license)
+    parser.add_argument("-V", "--version", action='version', version=program_version_string)
+    parser.add_argument("-v", "--verbose", dest="verbose", default=0, action="count",
+                      help="set verbosity level")
+    parser.add_argument("-c", "--config", dest="config",
                       help="read configuration from file", metavar="FILE")
-    parser.add_option("-e", "--env", dest="env",
-                      help="read environment data from file", metavar="FILE")
-    parser.add_option("-n", "--nameserver", dest="nameserver", action="append",
-                      help="Add the specified nameserver to enable SRV resolution", metavar="NS")
-    parser.add_option("-o", "--output", dest="output",
-                      help="output JUnit xml file", metavar="FILE")
-    parser.add_option("-k", "--keepon", dest="keepon", default=False, action="store_true",
+    parser.add_argument("-e", "--env", dest="env", metavar="FILE",
+                      help="read environment data from file")
+    parser.add_argument("-n", "--nameserver", dest="nameserver", nargs='+', metavar="NS",
+                      help="Add the specified nameserver to enable SRV resolution")
+    parser.add_argument("-o", "--output", dest="output", metavar="FILE",
+                      help="output JUnit xml file")
+    parser.add_argument("-k", "--keepon", dest="keepon", default=False, action="store_true",
                       help="do not stop on first failed scenario")
 
     # process options
-    (opts, args) = parser.parse_args(argv)
+    args = parser.parse_args(argv)
 
-    if not opts.config:
+    if not args.config:
         parser.print_help()
         return 2
     try:
-        config = ConfigParser.read_config(opts.config, opts.env)
+        config = ConfigParser.read_config(args.config, args.env)
     except Exception, e:
-        print "Unable to parse config file %s: %s" % (opts.config, e)
+        print "Unable to parse config file %s: %s" % (args.config, e)
         return 2
 
     settings = Settings.instance()
-    settings.verbose = opts.verbose
-    settings.nameserver = opts.nameserver
-    settings.keepon = opts.keepon
+    settings.verbose = args.verbose
+    settings.nameserver = args.nameserver
+    settings.keepon = args.keepon
 
     # Parse configuration scenarios
     scenarios = []
@@ -116,8 +117,8 @@ def main(argv=None):
     lib.deinit()
 
     # Save output if requested
-    if opts.output:
+    if args.output:
         junit = JUnitWriter()
-        junit.save(opts.output, scenarios)
+        junit.save(args.output, scenarios)
 
     return 0
