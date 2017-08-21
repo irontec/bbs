@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-'''
+"""
 bbs -- Black Box SIP Tester
 
 Simple scenario tester for SIP using PJSIP-UA python bindings.
@@ -13,7 +13,7 @@ Simple scenario tester for SIP using PJSIP-UA python bindings.
 
 @contact:    vozip@irontec.com
 @deffield    updated: Updated
-'''
+"""
 
 __all__ = []
 __version__ = 0.1
@@ -36,9 +36,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from argparse import ArgumentParser
 import sys
-
+from argparse import ArgumentParser
 from bbs.conf import ConfigParser
 from bbs.junit.writer import JUnitWriter
 from bbs.pjlib import PJLib
@@ -47,18 +46,27 @@ from bbs.settings import Settings
 
 
 def main(argv=None):
-    '''Command line options.'''
+    """Entry point of the program
 
-    program_version = "v%s" % __version__
-    program_build_date = "%s" % __updated__
+    This function will handle command line arguments and create required
+    instances in order to run the configuration scenarios.
 
-    program_longdesc = '''BBlack Box SIP Tester'''
-    program_version_string = '%s %s (%s)' % (program_longdesc, program_version, program_build_date)
-    program_license = '''License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+    Args:
+        argv (list, optional): List of command line flags and arguments.
 
+    Returns:
+        0 in case of success
+        1 in case of command line parsing errors
+        2 in case of configuration files parsing errors
+    """
+
+    program_longdesc = "Black Box SIP Tester"
+    program_version_string = '%s v%s (%s)' % (program_longdesc, __version__, __updated__)
+    program_license = """
+    License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
     This is free software: you are free to change and redistribute it.
-
-    There is NO WARRANTY, to the extent permitted by law.'''
+    There is NO WARRANTY, to the extent permitted by law.
+    """
 
     if argv is None:
         argv = sys.argv[1:]
@@ -67,30 +75,31 @@ def main(argv=None):
     parser = ArgumentParser(description=program_longdesc, epilog=program_license)
     parser.add_argument("-V", "--version", action='version', version=program_version_string)
     parser.add_argument("-v", "--verbose", dest="verbose", default=0, action="count",
-                      help="set verbosity level")
+                        help="set verbosity level")
     parser.add_argument("-c", "--config", dest="config",
-                      help="read configuration from file", metavar="FILE")
+                        help="read configuration from file", metavar="FILE")
     parser.add_argument("-e", "--env", dest="env", metavar="FILE",
-                      help="read environment data from file")
+                        help="read environment data from file")
     parser.add_argument("-n", "--nameserver", dest="nameserver", nargs='+', metavar="NS",
-                      help="Add the specified nameserver to enable SRV resolution")
+                        help="Add the specified nameserver to enable SRV resolution")
     parser.add_argument("-o", "--output", dest="output", metavar="FILE",
-                      help="output JUnit xml file")
+                        help="output JUnit xml file")
     parser.add_argument("-k", "--keepon", dest="keepon", default=False, action="store_true",
-                      help="do not stop on first failed scenario")
+                        help="do not stop on first failed scenario")
 
     # process options
     args = parser.parse_args(argv)
 
     if not args.config:
         parser.print_help()
-        return 2
-    try:
-        config = ConfigParser.read_config(args.config, args.env)
-    except Exception, e:
-        print "Unable to parse config file %s: %s" % (args.config, e)
+        return 1
+
+    # read environment configuration
+    config = ConfigParser.read_config(args.config, args.env)
+    if not config:
         return 2
 
+    # Set global settings
     settings = Settings.instance()
     settings.verbose = args.verbose
     settings.nameserver = args.nameserver

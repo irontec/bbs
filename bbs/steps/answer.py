@@ -15,10 +15,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""Black Box SIP Answer session Step
+
+This modules handles the BBS session step 'answer' in charge of answering
+incoming calls.
+
+"""
 from bbs.steps.step import Step
 
 class AnswerStep(Step):
+    """
+    This class will manage the steps named as 'answer' in any session.
 
+    This step is designed to be used after manager has received the event
+    INCOMING. If there are multiple incoming calls, the name parameter can be
+    used to determine which one will be answered.
+    """
     def __init__(self):
         Step.__init__(self)
         self.name = None
