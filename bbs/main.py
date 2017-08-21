@@ -16,9 +16,10 @@ Simple scenario tester for SIP using PJSIP-UA python bindings.
 """
 
 __all__ = []
+__progname__ = 'bbs'
 __version__ = 0.1
 __date__ = '2017-03-31'
-__updated__ = '2017-03-31'
+__updated__ = '2017-08-21'
 __copyright__ = """
 Copyright (C) 2017  Irontec S.L.
 
@@ -61,19 +62,20 @@ def main(argv=None):
     """
 
     program_longdesc = "Black Box SIP Tester"
-    program_version_string = '%s v%s (%s)' % (program_longdesc, __version__, __updated__)
+    program_version = '%s v%s (%s)' % (__progname__, __version__, __updated__)
     program_license = """
     License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
     This is free software: you are free to change and redistribute it.
     There is NO WARRANTY, to the extent permitted by law.
     """
+    program_longdesc = "Simple scenario tester for SIP using PJSIP-UA python bindings."
 
     if argv is None:
         argv = sys.argv[1:]
 
     # setup option parser
     parser = ArgumentParser(description=program_longdesc, epilog=program_license)
-    parser.add_argument("-V", "--version", action='version', version=program_version_string)
+    parser.add_argument("-V", "--version", action='version', version=program_version)
     parser.add_argument("-v", "--verbose", dest="verbose", default=0, action="count",
                         help="set verbosity level")
     parser.add_argument("-c", "--config", dest="config",
