@@ -32,6 +32,8 @@ class Settings(object):
       keepon: bool = False
         If false, application will stop running scenarios after the first
         unsuccessful scenario.
+      nameserver: str
+        Stores nameservers determined in command line
     """
     _instance = None
 
@@ -46,4 +48,3 @@ class Settings(object):
         if not Settings._instance:
             Settings._instance = Settings()
         return Settings._instance
-
