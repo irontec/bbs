@@ -25,17 +25,22 @@ class ConfigParser(object):
     @staticmethod
     def read_config(conf_fname, env_fname=None):
         yaml_stream = ""
+
+        # Open environment file if any
+        if env_fname:
+            try:
+                yaml_stream += open(env_fname, 'r').read()
+            except (OSError, IOError) as ex:
+                print "Error opening %s: %s" % (env_fname, ex)
+
+        # Open configuration file
         try:
-            if env_fname:
-                with open(env_fname, 'r') as file:
-                    yaml_stream += file.read()
+            yaml_stream += open(conf_fname, 'r').read()
+        except (OSError, IOError) as ex:
+            print "Error opening %s: %s" % (conf_fname, ex)
 
-            with open(conf_fname, 'r') as file:
-                yaml_stream += file.read()
-
+        # Try to parse concatenated configuration files
+        try:
             return yaml.load(yaml_stream)
-
-        except yaml.YAMLError as e:
-            print e
-        except Exception as e:
-            print e
+        except yaml.YAMLError as ex:
+            print "Error parsing configuration yaml: ", ex
