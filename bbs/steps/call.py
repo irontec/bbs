@@ -24,36 +24,31 @@ class CallStep(Step):
 
     def __init__(self, call=None):
         Step.__init__(self)
-        self.number = None
+        self.dest = None
         self.name = None
-        self.uri = None
         self.callidnum = None
         self.hdrs = []
 
     def set_params(self, params):
 
         if isinstance(params, str):
-            if ':' in params:
-                self.uri = params
-            else:
-                self.number = params
+            self.dest = params
 
         if isinstance(params, int):
-            self.number = str(params)
+            self.dest = str(params)
 
         if isinstance(params, dict):
-            if 'number' in params:
-                self.number = str(params['number'])
-            if 'uri' in params:
-                self.uri = str(params['uri'])
-            if 'callidnum' in params:
-                self.callidnum = str(params['callidnum'])
             if 'name' in params:
                 self.name = params['name']
+            if 'dest' in params:
+                self.dest = str(params['dest'])
+            if 'callidnum' in params:
+                self.callidnum = str(params['callidnum'])
 
         if isinstance(params, list):
             self.name = params.pop(0)
-            self.number = params.pop(0)
+            self.dest = params.pop(0)
+            self.callidnum = params.pop(0)
 
     def run(self):
         try:
@@ -61,15 +56,16 @@ class CallStep(Step):
             if not self.session.account:
                 self.session.account = PJLib().get_default_account()
 
-            if self.uri:
-                self.log("-- [%s] Running %s to uri %s"
-                         % (self.session.name, self.__class__.__name__, self.uri))
-                desturi = self.uri
+            if ':' in self.dest:
+                # Use given URI
+                desturi = self.dest
             else:
-                self.log("-- [%s] Running %s to number %s"
-                         % (self.session.name, self.__class__.__name__, self.number))
+                # Get URI using domain from credentials
                 reg_uri = SIPUri(self.session.account.info().uri)
-                desturi = "%s:%s@%s" % (reg_uri.scheme, self.number, reg_uri.host)
+                desturi = "%s:%s@%s" % (reg_uri.scheme, self.dest, reg_uri.host)
+
+            self.log("-- [%s] Calling %s to uri %s"
+                     % (self.session.name, self.__class__.__name__, desturi))
 
             # Get a new manager to handle events on this call
             manager = self.session.get_manager(self.name)
