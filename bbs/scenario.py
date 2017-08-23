@@ -17,6 +17,7 @@
 
 import threading
 import time
+import sys
 
 from clint.textui import colored
 
@@ -169,10 +170,11 @@ class Scenario(object):
         self.log(colored.yellow("=============== %s =======================" % self.name))
 
         t = threading.Timer(self.timeout, self.failed)
+        t.daemon = True
         t.start()
 
         try:
-            # Run scenario sessions in multipl threads
+            # Run scenario sessions in multiple threads
             for session in self.sessions.values():
                 session.run_background()
 
@@ -189,7 +191,9 @@ class Scenario(object):
                 self.log(colored.green("Scenario ended successfully"))
             else:
                 self.log(colored.red("Scenario has failed"))
-
+        except KeyboardInterrupt:
+            print "\nInterrupt key pressed, quitting..."
+            sys.exit(1)
         except:
             print self.log(colored.red("Scenario has failed"))
 
