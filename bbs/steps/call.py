@@ -59,7 +59,7 @@ class CallStep(Step):
         try:
             # If not account is set, use default one
             if not self.session.account:
-                self.session.account = PJLib.instance().get_default_account()
+                self.session.account = PJLib().get_default_account()
 
             if self.uri:
                 self.log("-- [%s] Running %s to uri %s"

@@ -19,17 +19,16 @@
 import pjsua
 from bbs.settings import Settings
 
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
 
 class PJLib(object):
     """
     This class will manage the unique instance of pjsip library.
-    Rest of the process can access this library by using the static
-    class method instance()
-
-    Class attributes:
-      _instance: PJLib
-        Stores the only instance of this class that must be accessed using the
-        class method instance().
 
     Instance attributes:
       lib: pjsua.Lib
@@ -38,19 +37,11 @@ class PJLib(object):
       transport: pjsua.Transport
         Default SIP UDP transport for all SIP messages.
     """
-    _instance = None
+    __metaclass__ = Singleton
 
     def __init__(self):
         self.lib = None
         self.transport = None
-
-    @staticmethod
-    def instance():
-        """Static class method to retrieve the unique instance of PJLib"""
-        if not PJLib._instance:
-            PJLib._instance = PJLib()
-        return PJLib._instance
-
 
     def init(self):
         """Initialize global pjsip library.
@@ -58,11 +49,11 @@ class PJLib(object):
         """
         try:
             # Get log level from command line
-            log_level = Settings.instance().verbose
-            nameserver = Settings.instance().nameserver
+            log_level = Settings().verbose
+            nameserver = Settings().nameserver
             if nameserver:
                 ua_cfg = pjsua.UAConfig()
-                ua_cfg.nameserver = Settings.instance().nameserver
+                ua_cfg.nameserver = Settings().nameserver
             else:
                 ua_cfg = None
 

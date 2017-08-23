@@ -137,7 +137,7 @@ class Scenario(object):
         If versbose level is high enough, also print message to output
         """
         self.mutex.acquire()
-        settings = Settings.instance()
+        settings = Settings()
         if settings.verbose:
             print msg
         self.messages.append(colored.clean(msg))

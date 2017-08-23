@@ -102,7 +102,7 @@ def main(argv=None):
         return 2
 
     # Set global settings
-    settings = Settings.instance()
+    settings = Settings()
     settings.verbose = args.verbose
     settings.nameserver = args.nameserver
     settings.keepon = args.keepon
@@ -115,7 +115,7 @@ def main(argv=None):
                 scenarios.append(Scenario(name))
 
     # Initializa PJSUA
-    lib = PJLib.instance()
+    lib = PJLib()
     lib.init()
 
     # Run loaded scenarios

@@ -44,7 +44,7 @@ class CredentialsStep(Step, AccountCallback):
         acc_cfg = AccountConfig(self.domain, self.username, self.password)
         acc_cfg.reg_uri = None
         # Set default transport for this accounts
-        acc_cfg.transport_id = PJLib.instance().transport._id
+        acc_cfg.transport_id = PJLib().transport._id
         # Create the account and associate to the session
         self.session.account = Lib.instance().create_account(acc_cfg, False, self)
         # We don't register, so there's no way to check if credentials are

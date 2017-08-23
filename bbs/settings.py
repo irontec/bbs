@@ -15,16 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
 class Settings(object):
     """
     This class will manage the unique instance of settings.
-    Rest of the process can access application settings by using the static
-    class method instance()
-
-    Class attributes:
-      _instance: PJLib
-        Stores the only instance of this class that must be accessed using the
-        class method instance().
 
     Instance attributes:
       verbose: int
@@ -35,16 +35,9 @@ class Settings(object):
       nameserver: str
         Stores nameservers determined in command line
     """
-    _instance = None
+    __metaclass__ = Singleton
 
     def __init__(self):
         self.verbose = 0
         self.nameserver = None
         self.keepon = False
-
-    @staticmethod
-    def instance():
-        """Static class method to retrieve the unique instance of Settings"""
-        if not Settings._instance:
-            Settings._instance = Settings()
-        return Settings._instance
