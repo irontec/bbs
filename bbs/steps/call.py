@@ -33,7 +33,7 @@ class CallStep(Step):
     def set_params(self, params):
 
         if isinstance(params, str):
-            if '@' in params:
+            if ':' in params:
                 self.uri = params
             else:
                 self.number = params
