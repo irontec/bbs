@@ -29,14 +29,14 @@ class CredentialsStep(Step, AccountCallback):
     def set_params(self, params):
 
         if isinstance(params, dict):
-            self.username = params['username']
-            self.password = params['password']
-            self.domain = params['domain']
+            self.username = str(params['username'])
+            self.password = str(params['password'])
+            self.domain = str(params['domain'])
 
         if isinstance(params, list):
-            self.username = params.pop(0)
-            self.password = params.pop(0)
-            self.domain = params.pop(0)
+            self.username = str(params.pop(0))
+            self.password = str(params.pop(0))
+            self.domain = str(params.pop(0))
 
     def run(self):
         self.log("-- [%s] Running %s " % (self.session.name, self.__class__.__name__))
