@@ -27,6 +27,7 @@ class CallStep(Step):
         self.dest = None
         self.name = None
         self.callidnum = None
+        self.diversion = []
         self.hdrs = []
 
     def set_params(self, params):
@@ -44,11 +45,32 @@ class CallStep(Step):
                 self.dest = str(params['dest'])
             if 'callidnum' in params:
                 self.callidnum = str(params['callidnum'])
+            if 'diversion' in params:
+                self.diversion = params['diversion']
 
         if isinstance(params, list):
             self.name = params.pop(0)
             self.dest = params.pop(0)
             self.callidnum = params.pop(0)
+
+    def create_uri(self, candidate='12345'):
+        """Given a number, create uri with registry uri.
+        Given an uri, return that uri"""
+
+        if ':' in candidate:
+            final_uri = candidate
+        else:
+            reg_uri = SIPUri(self.session.account.info().uri)
+            final_uri = "%s:%s@%s" % (reg_uri.scheme, candidate, reg_uri.host)
+
+        return final_uri
+
+    def add_header(self, hdr_name, hdr_uri):
+        """Add SIP header with a given URI"""
+        uri = self.create_uri(hdr_uri)
+        hdr = (hdr_name, "<{}>".format(uri))
+        self.log("-- [{}] Adding {} header: '{}'".format(self.session.name, hdr[0], hdr[1]))
+        self.hdrs.append(hdr)
 
     def run(self):
         try:
@@ -56,25 +78,21 @@ class CallStep(Step):
             if not self.session.account:
                 self.session.account = PJLib().get_default_account()
 
-            if ':' in self.dest:
-                # Use given URI
-                desturi = self.dest
-            else:
-                # Get URI using domain from credentials
-                reg_uri = SIPUri(self.session.account.info().uri)
-                desturi = "%s:%s@%s" % (reg_uri.scheme, self.dest, reg_uri.host)
-
+            # Dest-URI
+            desturi = self.create_uri(self.dest)
             self.log("-- [%s] Calling %s to uri %s"
                      % (self.session.name, self.__class__.__name__, desturi))
 
+            # P-Asserted-Identity
+            if self.callidnum:
+                self.add_header("P-Asserted-Identity", self.callidnum)
+
+            # Diversion header(s)
+            for div in self.diversion:
+                self.add_header("Diversion", div)
+
             # Get a new manager to handle events on this call
             manager = self.session.get_manager(self.name)
-
-            if self.callidnum:
-                reg_uri = SIPUri(self.session.account.info().uri)
-                pai_hdr = ("P-Asserted-Identity", "<%s:%s@%s>"
-                           % (reg_uri.scheme, self.callidnum, reg_uri.host))
-                self.hdrs.append(pai_hdr)
 
             self.session.account.make_call(desturi, manager, self.hdrs)
             self.succeeded()
