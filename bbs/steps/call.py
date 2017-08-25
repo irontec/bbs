@@ -26,7 +26,7 @@ class CallStep(Step):
         Step.__init__(self)
         self.dest = None
         self.name = None
-        self.callidnum = None
+        self.caller = None
         self.diversion = []
         self.hdrs = []
 
@@ -43,15 +43,15 @@ class CallStep(Step):
                 self.name = params['name']
             if 'dest' in params:
                 self.dest = str(params['dest'])
-            if 'callidnum' in params:
-                self.callidnum = str(params['callidnum'])
+            if 'caller' in params:
+                self.caller = str(params['caller'])
             if 'diversion' in params:
                 self.diversion = params['diversion']
 
         if isinstance(params, list):
             self.name = params.pop(0)
             self.dest = params.pop(0)
-            self.callidnum = params.pop(0)
+            self.caller = params.pop(0)
 
     def create_uri(self, candidate='12345'):
         """Given a number, create uri with registry uri.
@@ -84,8 +84,8 @@ class CallStep(Step):
                      % (self.session.name, self.__class__.__name__, desturi))
 
             # P-Asserted-Identity
-            if self.callidnum:
-                self.add_header("P-Asserted-Identity", self.callidnum)
+            if self.caller:
+                self.add_header("P-Asserted-Identity", self.caller)
 
             # Diversion header(s)
             for div in self.diversion:
