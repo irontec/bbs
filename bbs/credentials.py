@@ -16,18 +16,9 @@
 #
 
 from pjsua import Lib, AccountConfig, AccountCallback
-from bbs.steps.step import Step
-from bbs.pjlib import PJLib
 
-
-class CredentialsStep(Step, AccountCallback):
-
-    def __init__(self):
-        Step.__init__(self)
-        AccountCallback.__init__(self, None)
-
-    def set_params(self, params):
-
+class Credentials(AccountCallback):
+    def __init__(self, params):
         if isinstance(params, dict):
             self.username = str(params['username'])
             self.password = str(params['password'])
@@ -37,16 +28,9 @@ class CredentialsStep(Step, AccountCallback):
             self.username = str(params.pop(0))
             self.password = str(params.pop(0))
             self.domain = str(params.pop(0))
+        AccountCallback.__init__(self, None)
 
-    def run(self):
-        self.log("-- [%s] Running %s " % (self.session.name, self.__class__.__name__))
-        # Setup account with given credentials, but without register URI
+    def get_account(self):
         acc_cfg = AccountConfig(self.domain, self.username, self.password)
         acc_cfg.reg_uri = None
-        # Set default transport for this accounts
-        acc_cfg.transport_id = PJLib().transport._id
-        # Create the account and associate to the session
-        self.session.account = Lib.instance().create_account(acc_cfg, False, self)
-        # We don't register, so there's no way to check if credentials are
-        # correct at this point
-        self.succeeded()
+        return Lib.instance().create_account(acc_cfg, False, self)

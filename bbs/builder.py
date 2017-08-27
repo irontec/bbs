@@ -22,8 +22,6 @@ class StepBuilder(object):
 
     @staticmethod
     def from_name(name):
-        if name == "credentials":
-            return credentials.CredentialsStep()
         if name == "register":
             return register.RegisterStep()
         if name == "unregister":

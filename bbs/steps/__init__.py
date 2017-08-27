@@ -16,7 +16,6 @@
 
 __all__ = [
     'step',
-    'credentials',
     'register',
     'unregister',
     'call',

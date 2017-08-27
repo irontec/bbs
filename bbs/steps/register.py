@@ -17,13 +17,23 @@
 
 import re
 from pjsua import Lib, AccountConfig, AccountCallback, SIPUri
-from bbs.steps.credentials import CredentialsStep
+from bbs.steps.step import Step
 
 
-class RegisterStep(CredentialsStep, AccountCallback):
+class RegisterStep(Step, AccountCallback):
 
     def __init__(self):
-        CredentialsStep.__init__(self)
+        self.username = None
+        self.password = None
+        self.domain = None
+        Step.__init__(self)
+        AccountCallback.__init__(self)
+
+    def set_params(self, params):
+        if isinstance(params, dict):
+            self.username = str(params['username'])
+            self.password = str(params['password'])
+            self.domain = str(params['domain'])
 
     def on_reg_state(self):
         # Set session account

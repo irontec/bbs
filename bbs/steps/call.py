@@ -18,6 +18,7 @@
 from pjsua import SIPUri
 from bbs.pjlib import PJLib
 from bbs.steps.step import Step
+from bbs.credentials import Credentials
 
 
 class CallStep(Step):
@@ -29,6 +30,7 @@ class CallStep(Step):
         self.caller = None
         self.diversion = []
         self.hdrs = []
+        self.credentials = None
 
     def set_params(self, params):
 
@@ -47,6 +49,8 @@ class CallStep(Step):
                 self.caller = str(params['caller'])
             if 'diversion' in params:
                 self.diversion = params['diversion']
+            if 'credentials' in params:
+                self.credentials = params['credentials']
 
         if isinstance(params, list):
             self.name = params.pop(0)
@@ -75,8 +79,10 @@ class CallStep(Step):
     def run(self):
         try:
             # If not account is set, use default one
-            if not self.session.account:
+            if not self.credentials:
                 self.session.account = PJLib().get_default_account()
+            else:
+                self.session.account = Credentials(self.credentials).get_account()
 
             # Dest-URI
             desturi = self.create_uri(self.dest)
