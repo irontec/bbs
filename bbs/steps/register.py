@@ -26,6 +26,7 @@ class RegisterStep(Step, AccountCallback):
         self.username = None
         self.password = None
         self.domain = None
+        self.transport = None
         Step.__init__(self)
         AccountCallback.__init__(self)
 
@@ -34,6 +35,8 @@ class RegisterStep(Step, AccountCallback):
             self.username = str(params['username'])
             self.password = str(params['password'])
             self.domain = str(params['domain'])
+            if 'transport' in params:
+                self.transport = str(params['transport']).lower()
 
     def on_reg_state(self):
         # Set session account
@@ -55,6 +58,8 @@ class RegisterStep(Step, AccountCallback):
 
     def run(self):
         self.log("-- [%s] Running %s " % (self.session.name, self.__class__.__name__))
+        if self.transport:
+            self.domain += ';transport={}'.format(self.transport)
         acc_cfg = AccountConfig(self.domain, self.username, self.password)
         self.session.account = Lib.instance().create_account(acc_cfg, False, self)
         self.wait_status()

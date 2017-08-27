@@ -41,7 +41,12 @@ class PJLib(object):
 
     def __init__(self):
         self.lib = None
-        self.transport = None
+        self.transport_udp = None
+        self.transport_tcp = None
+        self.transport_tls = None
+        self.default_account_udp = None
+        self.default_account_tcp = None
+        self.default_account_tls = None
 
     def init(self):
         """Initialize global pjsip library.
@@ -60,8 +65,9 @@ class PJLib(object):
             # Initializa PJSUA
             self.lib = pjsua.Lib()
             self.lib.init(log_cfg=pjsua.LogConfig(level=log_level, callback=self.pjlog_cb), ua_cfg=ua_cfg)
-            self.transport = self.lib.create_transport(pjsua.TransportType.UDP)
-            self.default_account = self.lib.create_account_for_transport(self.transport)
+            self.transport_udp = self.lib.create_transport(pjsua.TransportType.UDP)
+            self.transport_tcp = self.lib.create_transport(pjsua.TransportType.TCP)
+            self.transport_tls = self.lib.create_transport(pjsua.TransportType.TLS)
             self.lib.set_null_snd_dev()
             self.lib.start()
         except pjsua.Error, e:
@@ -81,5 +87,16 @@ class PJLib(object):
         """Generic Log callbac for PJSUA library"""
         print str,
 
-    def get_default_account(self):
-        return self.default_account
+    def get_default_account(self, transport=None):
+        if transport == 'tcp':
+            if not self.default_account_tcp:
+                self.default_account_tcp = self.lib.create_account_for_transport(self.transport_tcp)
+            return self.default_account_tcp
+        elif transport == 'tls':
+            if not self.default_account_tls:
+                self.default_account_tls = self.lib.create_account_for_transport(self.transport_tls)
+            return self.default_account_tls
+        else:
+            if not self.default_account_udp:
+                self.default_account_udp = self.lib.create_account_for_transport(self.transport_udp)
+            return self.default_account_udp

@@ -30,6 +30,7 @@ class CallStep(Step):
         self.caller = None
         self.diversion = []
         self.hdrs = []
+        self.transport = None
         self.credentials = None
 
     def set_params(self, params):
@@ -49,6 +50,8 @@ class CallStep(Step):
                 self.caller = str(params['caller'])
             if 'diversion' in params:
                 self.diversion = params['diversion']
+            if 'transport' in params:
+                self.transport = params['transport'].lower()
             if 'credentials' in params:
                 self.credentials = params['credentials']
 
@@ -80,12 +83,16 @@ class CallStep(Step):
         try:
             # If not account is set, use default one
             if not self.credentials:
-                self.session.account = PJLib().get_default_account()
+                self.session.account = PJLib().get_default_account(self.transport)
             else:
+                if self.transport:
+                    self.credentials['domain'] += ';transport={}'.format(self.transport)
                 self.session.account = Credentials(self.credentials).get_account()
 
             # Dest-URI
             desturi = self.create_uri(self.dest)
+            if self.transport:
+                desturi += ';transport={}'.format(self.transport)
             self.log("-- [%s] Calling %s to uri %s"
                      % (self.session.name, self.__class__.__name__, desturi))
 
