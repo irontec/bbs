@@ -135,7 +135,7 @@ class Scenario(object):
 
     def log(self, msg):
         """Store step message in instance message list.
-        If versbose level is high enough, also print message to output
+        If verbose level is high enough, also print message to output
         """
         self.mutex.acquire()
         settings = Settings()
