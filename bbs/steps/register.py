@@ -18,6 +18,7 @@
 import re
 from pjsua import Lib, AccountConfig, AccountCallback, SIPUri
 from bbs.steps.step import Step
+from bbs.settings import Settings
 
 
 class RegisterStep(Step, AccountCallback):
@@ -31,11 +32,15 @@ class RegisterStep(Step, AccountCallback):
         AccountCallback.__init__(self)
 
     def set_params(self, params):
+        forced_transport = Settings().transport
+        if forced_transport:
+            self.transport = forced_transport
+
         if isinstance(params, dict):
             self.username = str(params['username'])
             self.password = str(params['password'])
             self.domain = str(params['domain'])
-            if 'transport' in params:
+            if 'transport' in params and not forced_transport:
                 self.transport = str(params['transport']).lower()
 
     def on_reg_state(self):

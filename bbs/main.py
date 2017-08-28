@@ -88,6 +88,8 @@ def main(argv=None):
                         help="output JUnit xml file")
     parser.add_argument("-k", "--keepon", dest="keepon", default=False, action="store_true",
                         help="do not stop on first failed scenario")
+    parser.add_argument("-t", "--transport", choices=['udp', 'tcp', 'tls'], dest="transport",
+                        help="Force UDP/TCP/TLS for all transactions")
 
     # process options
     args = parser.parse_args(argv)
@@ -106,6 +108,7 @@ def main(argv=None):
     settings.verbose = args.verbose
     settings.nameserver = args.nameserver
     settings.keepon = args.keepon
+    settings.transport = args.transport
 
     # Parse configuration scenarios
     scenarios = []

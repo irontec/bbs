@@ -19,6 +19,7 @@ from pjsua import SIPUri
 from bbs.pjlib import PJLib
 from bbs.steps.step import Step
 from bbs.credentials import Credentials
+from bbs.settings import Settings
 
 
 class CallStep(Step):
@@ -34,6 +35,9 @@ class CallStep(Step):
         self.credentials = None
 
     def set_params(self, params):
+        forced_transport = Settings().transport
+        if forced_transport:
+            self.transport = forced_transport
 
         if isinstance(params, str):
             self.dest = params
@@ -50,7 +54,7 @@ class CallStep(Step):
                 self.caller = str(params['caller'])
             if 'diversion' in params:
                 self.diversion = params['diversion']
-            if 'transport' in params:
+            if 'transport' in params and not forced_transport:
                 self.transport = params['transport'].lower()
             if 'credentials' in params:
                 self.credentials = params['credentials']

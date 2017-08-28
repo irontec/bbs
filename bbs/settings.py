@@ -34,6 +34,8 @@ class Settings(object):
         unsuccessful scenario.
       nameserver: str
         Stores nameservers determined in command line
+      transport: str
+        Force transport for all transactions
     """
     __metaclass__ = Singleton
 
@@ -41,3 +43,4 @@ class Settings(object):
         self.verbose = 0
         self.nameserver = None
         self.keepon = False
+        self.transport = None
