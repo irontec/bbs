@@ -22,9 +22,9 @@ $ python setup.py build
 
 BBS reads a configuration YAML file with the information of the scenarios to
 execute. Check examples directory for some basic UAC->UAS examples.
-You can also specify credentials in another extra confgiration file.
+You can also specify credentials in another extra configuration file.
 
-BBS supports output in JUnit for reporting in continous intragration engines.
+BBS supports output in JUnit for reporting in continuous integration engines.
 
 ```
 bbs -c examples/simple.yaml -e credentials.yaml -vvv -k -o results.xml
