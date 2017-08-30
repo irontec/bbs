@@ -43,6 +43,13 @@ class RegisterStep(Step, AccountCallback):
             if 'transport' in params and not forced_transport:
                 self.transport = str(params['transport']).lower()
 
+        if isinstance(params, list):
+            self.username = str(params.pop(0))
+            self.password = str(params.pop(0))
+            self.domain = str(params.pop(0))
+            if params and not forced_transport:
+                self.transport = str(params.pop(0))
+
     def on_reg_state(self):
         # Set session account
         self.session.account = self.account
