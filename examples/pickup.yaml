@@ -8,19 +8,20 @@ scenarios:
   - name: call from alice to bob picked up by charlie
     timeout: 20
     sessions:
-    
+
       - caller_alice:
-          - credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
           - wait
           - log: I wonder how bob is doing
-          - call: 1001
+          - call:
+              dest: 1001
+              credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
           - waitfor: CONFIRMED
           - log: Call has been answered, but you're not bob! Wazzap Charlie!
           - wait: 3
           - hangup
           - waitfor: DISCONNCTD
-          
-          
+
+
       - callee_bob:
           - register: [ "bob", "b0bp4ssw0rd", "sip.domain.com" ]
           - waitfor: INCOMING
@@ -28,12 +29,13 @@ scenarios:
           - waitfor: DISCONNCTD
           - log: My call is no longer ringing... it was picked up elsewhere.
           - unregister
-          
-          
+
+
       - pickuper_charlie:
-          - credentials: [ "charlie", "ch4rl1e4ssw0rd", "sip.domain.com" ]
           - wait: 5
           - log: Bob's ringing, I'll try to pickup his call.
-          - call: '*7'
+          - call:
+              dest: '*7'
+              credentials: [ "charlie", "ch4rl1e4ssw0rd", "sip.domain.com" ]
           - waitfor: CONFIRMED
           - waitfor: DISCONNCTD

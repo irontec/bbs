@@ -5,9 +5,10 @@ voicemail_test: &voicemail_test
     timeout: 30
     sessions:
       - voicemail_test_uac:
-          - credentials:
-              <<: *alice_cred
-          - call: "*98"
+          - call:
+              dest: "*98"
+              credentials:
+                <<: *alice_cred
           - waitfor: CONFIRMED
           - wait: 20
           - dtmf: "#"
@@ -20,10 +21,11 @@ simple_call_test: &simple_call_test
     timeout: 20
     sessions:
       - call_uac_alice:
-          - credentials:
-              <<: *alice_cred
           - wait
-          - call: 1001
+          - call:
+              dest: 1001
+              credentials:
+                <<: *alice_cred
           - waitfor: CONFIRMED
           - wait: 2
           - hangup
@@ -42,9 +44,10 @@ simple_call_ivr: &simple_call_ivr
     timeout: 20
     sessions:
       - ivr_uac_bob:
-          - credentials:
-              <<: *bob_cred
-          - call: 600             # IVR common extension
+          - call:
+              dest: 600             # IVR common extension
+              credentials:
+                <<: *bob_cred
           - waitfor: CONFIRMED
           - wait: 3
           - dtmf: "1"

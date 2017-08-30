@@ -11,8 +11,9 @@ scenarios:
 
       # Alice: Call to Bob at 1001
       - caller_alice:
-          - credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
-          - call: 1001
+          - call:
+              dest: 1001
+              credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
           - waitfor: CONFIRMED
           - waitfor: DISCONNCTD
 
@@ -24,7 +25,8 @@ scenarios:
           - wait
           - call:
              name: TO_CHARLIE
-             number: 1002
+             dest: 1002
+             credentials: [ "bob", "b0bp4ssw0rd", "sip.domain.com" ]
           - waitfor:
              call: TO_CHARLIE
              name: CONFIRMED

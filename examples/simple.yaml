@@ -9,9 +9,10 @@ scenarios:
     sessions:
 
       - call_uac_alice:
-          - credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
           - wait
-          - call: 1001
+          - call:
+              dest: 1001
+              credentials: [ "alice", "gDbCV8s1*8", "sip.domain.com" ]
           - waitfor: CONFIRMED
           - wait: 2
           - hangup
