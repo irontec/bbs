@@ -59,11 +59,6 @@ class CallStep(Step):
             if 'credentials' in params:
                 self.credentials = params['credentials']
 
-        if isinstance(params, list):
-            self.name = params.pop(0)
-            self.dest = params.pop(0)
-            self.caller = params.pop(0)
-
     def create_uri(self, candidate='12345'):
         """Given a number, create uri with registry uri.
         Given an uri, return that uri"""
