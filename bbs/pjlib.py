@@ -76,7 +76,7 @@ class PJLib(object):
 
 
     def deinit(self):
-        """Deinitialization of global pjsil library.
+        """Deinitialization of global pjsip library.
         This ensure that all accounts are properly unregistered and calls are
         hanguped up gracefully before leaving"""
         if self.lib:

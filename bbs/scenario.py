@@ -33,15 +33,15 @@ class Scenario(object):
 
     Instance attributes:
       name: string
-        Decriptive name for the test being executed.
+        Descriptive name for the test being executed.
       type: string
         Determines the way this scenario will be executed.
-        In 'parallel' type scenarios, all sessions will be runned at the same
-        time. In 'secuenctial' type scenarios, steps will be runned based on
+        In 'parallel' type scenarios, all sessions will be run at the same
+        time. In 'sequential' type scenarios, steps will be run based on
         their creation order (step 'index').
       timeout: int = 180
         Max time in seconds this scenario will be running. This is handy for
-        sessions with steps that wait indefinitely until an event has ocurred.
+        sessions with steps that wait indefinitely until an event has occurred.
         Scenarios that reach the timeout are considered failed.
       time_out: bool = false
         Determines if scenario has ended because timeout has been reached.
@@ -54,16 +54,16 @@ class Scenario(object):
       mutex: Lock
         Lock to ensure proper order of output messages of steps of the scenario.
       count: int
-        Number of times this scenario will be runned in sequence.
+        Number of times this scenario will be run in sequence.
     """
 
     def __init__(self, params):
         """Parse scenario sessions:
            Scenario can contain multiple sessions identified by a name.
-           Based on scenaario type, the steps will be runned secuentially or
+           Based on scenario type, the steps will be run sequentially or
            parallel.
 
-           This allows repeting the session name in case you want to split the
+           This allows repeating the session name in case you want to split the
            steps execution.
 
            scenario:
@@ -165,7 +165,7 @@ class Scenario(object):
     def run_parallel(self):
         """Run scenario sessions in parallel threads.
         We also register a timer that will trigger after 'timeout' seconds unless
-        scensario completes and cancels it.
+        scenario completes and cancels it.
         """
         self.log(colored.yellow("=============== %s =======================" % self.name))
 
@@ -183,7 +183,7 @@ class Scenario(object):
                 time.sleep(0.5)
                 continue
 
-            # On succesfull completition, avoid timeout handler to be triggered
+            # On successful completion, avoid timeout handler to be triggered
             if not self.timed_out:
                 t.cancel()
 

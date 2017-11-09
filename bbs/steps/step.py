@@ -28,17 +28,17 @@ class Step(object):
     Instance attributes:
       index: int
         Position of this step in the whole scenario. This vale only affects
-        secuential types scenarios.
+        sequential types scenarios.
       session: Session
         Session instance this step belongs to. Used to access session active
         calls and SIP session account.
       success: bool = None
         Determines if the step has been completed successfully. If None, the
-        step has not yet runned or condition to determine success has not yet
+        step has not yet run or condition to determine success has not yet
         met.
       timeout: int = 5
         Determines how much seconds wait_status will wait before considering
-        the step failed. This can be overriden by function parameters.
+        the step failed. This can be overridden by function parameters.
 
     """
     __metaclass__ = abc.ABCMeta
