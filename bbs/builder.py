@@ -46,6 +46,8 @@ class StepBuilder(object):
             return busy.BusyStep()
         if name == "callid":
             return callid.CallidStep()
+        if name == "diversion":
+            return diversion.DiversionStep()
         if name == "blindxfer":
             return blindxfer.BlindXferStep()
         if name == "attxfer":
