@@ -44,6 +44,8 @@ class StepBuilder(object):
             return hangup.HangupStep()
         if name == "busy":
             return busy.BusyStep()
+        if name == "redirect":
+            return redirect.RedirectStep()
         if name == "callid":
             return callid.CallidStep()
         if name == "diversion":

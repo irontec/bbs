@@ -23,6 +23,7 @@ __all__ = [
     'ringing',
     'hangup',
     'busy',
+    'redirect',
     'dtmf',
     'attxfer',
     'blindxfer',
