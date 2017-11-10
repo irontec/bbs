@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from time import sleep
 from bbs.steps.step import Step
 
 
@@ -23,18 +24,24 @@ class RingingStep(Step):
     def __init__(self):
         Step.__init__(self)
         self.name = None
+        self.time = 0
 
     def set_params(self, params):
         if isinstance(params, str):
             self.name = params
+        if isinstance(params, int):
+            self.time = params
         if isinstance(params, dict):
             self.name = params['name']
+            self.time = int(params['time'])
 
     def run(self):
-        self.log("-- [%s] Running %s " % (self.session.name, self.__class__.__name__))
+        self.log("-- [%s] Running %s [%d seconds]" % (self.session.name, self.__class__.__name__, self.time))
         call = self.session.get_call(self.name)
         if call:
             call.answer(180)
+            if self.time:
+                sleep(self.time)
             self.succeeded()
         else:
             self.failed()
