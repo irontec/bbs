@@ -22,37 +22,27 @@ class StepBuilder(object):
 
     @staticmethod
     def from_name(name):
-        if name == "register":
-            return register.RegisterStep()
-        if name == "unregister":
-            return unregister.UnregisterStep()
-        if name == "waitfor":
-            return waitfor.WaitforStep()
-        if name == "wait":
-            return wait.WaitStep()
-        if name == "log":
-            return log.LogStep()
-        if name == "call":
-            return call.CallStep()
-        if name == "answer":
-            return answer.AnswerStep()
-        if name == "ringing":
-            return ringing.RingingStep()
-        if name == "dtmf":
-            return dtmf.DtmfStep()
-        if name == "hangup":
-            return hangup.HangupStep()
-        if name == "busy":
-            return busy.BusyStep()
-        if name == "redirect":
-            return redirect.RedirectStep()
-        if name == "callid":
-            return callid.CallidStep()
-        if name == "diversion":
-            return diversion.DiversionStep()
-        if name == "blindxfer":
-            return blindxfer.BlindXferStep()
-        if name == "attxfer":
-            return attxfer.AttXferStep()
+
+        steps = {
+            'register': register.RegisterStep(),
+            'unregister': unregister.UnregisterStep(),
+            'waitfor': waitfor.WaitforStep(),
+            'wait': wait.WaitStep(),
+            'log': log.LogStep,
+            'call': call.CallStep(),
+            'answer': answer.AnswerStep(),
+            'ringing': ringing.RingingStep(),
+            'dtmf': dtmf.DtmfStep(),
+            'hangup': hangup.HangupStep(),
+            'busy': busy.BusyStep(),
+            'redirect': redirect.RedirectStep(),
+            'callid': callid.CallidStep(),
+            'diversion': diversion.DiversionStep(),
+            'blindxfer': blindxfer.BlindXferStep(),
+            'attxfer': attxfer.AttXferStep()
+        }
+
+        if name.lower() in steps:
+            return steps[name.lower()]
 
         raise Exception("Unknown step named " + name)
