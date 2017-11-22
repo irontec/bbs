@@ -16,6 +16,7 @@
 #
 
 import yaml
+from os.path import basename
 
 
 class ConfigFile(object):
@@ -27,7 +28,7 @@ class ConfigFile(object):
         self.scenarios = []
 
     def __str__(self):
-        return self.filename
+        return basename(self.filename)
 
     def add_scenario(self, scenario):
         self.scenarios.append(scenario)
