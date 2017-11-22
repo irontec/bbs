@@ -18,14 +18,15 @@ from junit_xml import TestCase, TestSuite
 
 class JUnitWriter(object):
 
-    def save(self, filename, scenarios):
+    def save(self, filename, conf_files):
         suite = TestSuite(filename)
 
-        for scenario in scenarios:
-            case = TestCase(scenario.name)
-            suite.test_cases.append(case)
-            if not scenario.succeeded():
-                case.add_error_info("\n".join(scenario.messages))
+        for conf_file in conf_files:
+            for scenario in conf_file.scenarios:
+                case = TestCase(scenario.name)
+                suite.test_cases.append(case)
+                if not scenario.succeeded():
+                    case.add_error_info("\n".join(scenario.messages))
 
         # pretty printing is on by default but can be disabled using prettyprint=False
         with open(filename, 'w') as f:

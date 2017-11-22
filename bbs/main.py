@@ -39,11 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 from argparse import ArgumentParser
-from bbs.conf import ConfigParser
 from bbs.junit.writer import JUnitWriter
 from bbs.pjlib import PJLib
 from bbs.scenario import Scenario
 from bbs.settings import Settings
+from bbs.configfile import ConfigFile
 
 
 def main(argv=None):
@@ -78,7 +78,7 @@ def main(argv=None):
     parser.add_argument("-V", "--version", action='version', version=program_version)
     parser.add_argument("-v", "--verbose", dest="verbose", default=0, action="count",
                         help="set verbosity level")
-    parser.add_argument("-c", "--config", dest="config",
+    parser.add_argument("-c", "--config", dest="config", nargs='+',
                         help="read configuration from file", metavar="FILE")
     parser.add_argument("-e", "--env", dest="env", metavar="FILE",
                         help="read environment data from file")
@@ -99,8 +99,24 @@ def main(argv=None):
         return 1
 
     # read environment configuration
-    config = ConfigParser.read_config(args.config, args.env)
-    if not config:
+    config_files = []
+    for file in args.config:
+        conf_file = ConfigFile(file)
+        configuration = conf_file.parse(args.env)
+
+        if not configuration:
+            return 2
+
+        for section in configuration:
+            if section == "scenarios":
+                for scenario_params in configuration[section]:
+                    scenario = Scenario(conf_file, scenario_params)
+                    conf_file.add_scenario(scenario)
+
+        config_files.append(conf_file)
+
+    if not config_files:
+        print "No valid configuration files found, quitting..."
         return 2
 
     # Set global settings
@@ -110,29 +126,23 @@ def main(argv=None):
     settings.keepon = args.keepon
     settings.transport = args.transport
 
-    # Parse configuration scenarios
-    scenarios = []
-    for section in config:
-        if section == "scenarios":
-            for name in config[section]:
-                scenarios.append(Scenario(name))
-
     # Initializa PJSUA
     lib = PJLib()
     lib.init()
 
     # Run loaded scenarios
-    for scenario in scenarios:
-        scenario.run()
-        if scenario.succeeded() is not True:
-            if settings.keepon is False:
-                break
+    for config_file in config_files:
+        for scenario in config_file.scenarios:
+            scenario.run()
+            if scenario.succeeded() is not True:
+                if settings.keepon is False:
+                    break
 
     lib.deinit()
 
     # Save output if requested
     if args.output:
         junit = JUnitWriter()
-        junit.save(args.output, scenarios)
+        junit.save(args.output, config_files)
 
     return 0

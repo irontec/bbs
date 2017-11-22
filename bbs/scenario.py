@@ -32,6 +32,8 @@ class Scenario(object):
     and define the basic settings of the test itself.
 
     Instance attributes:
+      conf_file: ConfFile
+        Configuration file containing this scenario
       name: string
         Descriptive name for the test being executed.
       type: string
@@ -57,7 +59,7 @@ class Scenario(object):
         Number of times this scenario will be run in sequence.
     """
 
-    def __init__(self, params):
+    def __init__(self, conf_file, params):
         """Parse scenario sessions:
            Scenario can contain multiple sessions identified by a name.
            Based on scenario type, the steps will be run sequentially or
@@ -79,6 +81,7 @@ class Scenario(object):
                        - wait
                        - hangup
         """
+        self.conf_file = conf_file
         self.name = params['name']
         self.type = 'simple'
         self.timeout = 180
@@ -167,7 +170,7 @@ class Scenario(object):
         We also register a timer that will trigger after 'timeout' seconds unless
         scenario completes and cancels it.
         """
-        self.log(colored.yellow("=============== %s =======================" % self.name))
+        self.log(colored.yellow("=============== %s (%s) =======================" % (self.name, self.conf_file)))
 
         t = threading.Timer(self.timeout, self.failed)
         t.daemon = True

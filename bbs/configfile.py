@@ -18,26 +18,35 @@
 import yaml
 
 
-class ConfigParser(object):
-    """Parse scenarios configuration file into python structures
+class ConfigFile(object):
+    """Parse configuration files into python structures containing scenarios
     """
 
-    @staticmethod
-    def read_config(conf_fname, env_fname=None):
+    def __init__(self, filename):
+        self.filename = filename
+        self.scenarios = []
+
+    def __str__(self):
+        return self.filename
+
+    def add_scenario(self, scenario):
+        self.scenarios.append(scenario)
+
+    def parse(self, env_file=None):
         yaml_stream = ""
 
         # Open environment file if any
-        if env_fname:
+        if env_file:
             try:
-                yaml_stream += open(env_fname, 'r').read()
+                yaml_stream += open(env_file, 'r').read()
             except (OSError, IOError) as ex:
-                print "Error opening %s: %s" % (env_fname, ex)
+                print "Error opening %s: %s" % (env_file, ex)
 
         # Open configuration file
         try:
-            yaml_stream += open(conf_fname, 'r').read()
+            yaml_stream += open(self.filename, 'r').read()
         except (OSError, IOError) as ex:
-            print "Error opening %s: %s" % (conf_fname, ex)
+            print "Error opening %s: %s" % (self.filename, ex)
 
         # Try to parse concatenated configuration files
         try:
