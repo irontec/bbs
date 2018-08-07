@@ -98,6 +98,13 @@ def main(argv=None):
         parser.print_help()
         return 1
 
+    # Set global settings
+    settings = Settings()
+    settings.verbose = args.verbose
+    settings.nameserver = args.nameserver
+    settings.keepon = args.keepon
+    settings.transport = args.transport
+
     # read environment configuration
     config_files = []
     for file in args.config:
@@ -119,13 +126,6 @@ def main(argv=None):
         print "No valid configuration files found, quitting..."
         return 2
 
-    # Set global settings
-    settings = Settings()
-    settings.verbose = args.verbose
-    settings.nameserver = args.nameserver
-    settings.keepon = args.keepon
-    settings.transport = args.transport
-
     # Initializa PJSUA
     lib = PJLib()
     lib.init()
@@ -146,3 +146,7 @@ def main(argv=None):
         junit.save(args.output, config_files)
 
     return 0
+
+
+if __name__ == "__main__":
+    main()

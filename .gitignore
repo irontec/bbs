@@ -2,6 +2,7 @@
 .pydevproject
 .settings
 .vscode
+.idea
 
 *.pyc
 build

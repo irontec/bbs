@@ -19,12 +19,15 @@
 import pjsua
 from bbs.settings import Settings
 
+
 class Singleton(type):
     _instances = {}
+
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
+
 
 class PJLib(object):
     """
@@ -65,15 +68,19 @@ class PJLib(object):
             # Initializa PJSUA
             self.lib = pjsua.Lib()
             self.lib.init(log_cfg=pjsua.LogConfig(level=log_level, callback=self.pjlog_cb), ua_cfg=ua_cfg)
-            self.transport_udp = self.lib.create_transport(pjsua.TransportType.UDP)
-            self.transport_tcp = self.lib.create_transport(pjsua.TransportType.TCP)
-            self.transport_tls = self.lib.create_transport(pjsua.TransportType.TLS)
+
+            if Settings().transport == 'tcp':
+                self.transport_tcp = self.lib.create_transport(pjsua.TransportType.TCP)
+            elif Settings().transport == 'tls':
+                self.transport_tls = self.lib.create_transport(pjsua.TransportType.TLS)
+            else:
+                self.transport_udp = self.lib.create_transport(pjsua.TransportType.UDP)
+
             self.lib.set_null_snd_dev()
             self.lib.start()
         except pjsua.Error, e:
             self.lib.destroy()
             print "Exception: " + str(e)
-
 
     def deinit(self):
         """Deinitialization of global pjsip library.
