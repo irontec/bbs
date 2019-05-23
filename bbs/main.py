@@ -130,11 +130,16 @@ def main(argv=None):
     lib = PJLib()
     lib.init()
 
+
+    # Default exit code if all test succeded
+    exitcode = 0
+
     # Run loaded scenarios
     for config_file in config_files:
         for scenario in config_file.scenarios:
             scenario.run()
             if scenario.succeeded() is not True:
+                exitcode = 1
                 if settings.keepon is False:
                     break
 
@@ -145,7 +150,7 @@ def main(argv=None):
         junit = JUnitWriter()
         junit.save(args.output, config_files)
 
-    return 0
+    return exitcode
 
 
 if __name__ == "__main__":
