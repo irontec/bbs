@@ -1,0 +1,16 @@
+Source: bbs
+Section: php
+Priority: optional
+Build-Depends: debhelper, python-pjproject
+Standards-Version: 3.9.6
+Maintainer: Irontec Package Team <packages@irontec.com>
+
+Package: bbs
+Architecture: all
+Section: admin
+Priority: optional
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Homepage: http://www.irontec.com
+Description: BBS - Black Box SIP - Simple UA tester for VOIP
+ .
+
