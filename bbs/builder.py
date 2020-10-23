@@ -36,6 +36,8 @@ class StepBuilder(object):
             'hangup': hangup.HangupStep(),
             'busy': busy.BusyStep(),
             'redirect': redirect.RedirectStep(),
+            'hold': hold.HoldStep(),
+            'unhold': unhold.UnholdStep(),
             'callid': callid.CallidStep(),
             'diversion': diversion.DiversionStep(),
             'blindxfer': blindxfer.BlindXferStep(),

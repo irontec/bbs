@@ -30,6 +30,8 @@ __all__ = [
     'callid',
     'diversion',
     'log',
+    'hold',
+    'unhold',
     'wait',
     'waitfor'
 ]
