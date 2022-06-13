@@ -39,6 +39,7 @@ class StepBuilder(object):
             'hold': hold.HoldStep(),
             'unhold': unhold.UnholdStep(),
             'callid': callid.CallidStep(),
+            'callidname': callidname.CallidNameStep(),
             'diversion': diversion.DiversionStep(),
             'blindxfer': blindxfer.BlindXferStep(),
             'attxfer': attxfer.AttXferStep()

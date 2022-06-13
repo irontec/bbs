@@ -14,25 +14,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-__all__ = [
-    'step',
-    'register',
-    'unregister',
-    'call',
-    'answer',
-    'ringing',
-    'hangup',
-    'busy',
-    'redirect',
-    'dtmf',
-    'attxfer',
-    'blindxfer',
-    'callid',
-    'callidname',
-    'diversion',
-    'log',
-    'hold',
-    'unhold',
-    'wait',
-    'waitfor'
-]
+from bbs.steps.step import Step
+
+class CallidNameStep(Step):
+
+    def __init__(self):
+        Step.__init__(self)
+        self.expected = None
+
+    def set_params(self, params):
+        if isinstance(params, str):
+            self.expected = params
+
+        if isinstance(params, int):
+            self.expected = str(params)
+
+    def run(self):
+        self.log("-- [%s] Checking presentation name is %s " % (self.session.name, self.expected))
+        call = self.session.get_call()
+        if call and call.pai_name and call.pai_name == self.expected:
+            self.succeeded()
+            return
+
+        self.failed()

@@ -60,12 +60,14 @@ class RegisterStep(Step, AccountCallback):
         # Let the manager handle this call events
         manager = self.session.get_manager()
         call.set_callback(manager)
+        call.pai_name = None
         call.pai = None
         call.diversion = None
-        # Get callerid.num from incoming call
-        match = re.search("P-Asserted-Identity:[^\n]*<(.*)>\r\n", str(rdata.msg_info_buffer))
+        # Get callerid name and number from incoming call
+        match = re.search("P-Asserted-Identity: (?:\"([^\"]+)\" )?<(.*)>\r\n", str(rdata.msg_info_buffer))
         if match:
-            call.pai = SIPUri(match.group(1))
+            call.pai_name = match.group(1)
+            call.pai = SIPUri(match.group(2))
         # Get diversion.num from incoming call
         match = re.search("Diversion:[^\n]*<(.*)>[^\n]*\r\n", str(rdata.msg_info_buffer))
         if match:
