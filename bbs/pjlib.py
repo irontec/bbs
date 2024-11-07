@@ -70,9 +70,10 @@ class PJLib(object):
             self.lib.init(log_cfg=pjsua.LogConfig(level=log_level, callback=self.pjlog_cb), ua_cfg=ua_cfg)
 
             # Disable all codecs
-            for codec in self.lib.enum_codecs():
-                if not codec.name.startswith('PCM'):
-                    self.lib.set_codec_priority(codec.name, 0)
+            if Settings().stdcodecs:
+                for codec in self.lib.enum_codecs():
+                    if not codec.name.startswith('PCM'):
+                        self.lib.set_codec_priority(codec.name, 0)
 
             if Settings().transport == 'tcp':
                 self.transport_tcp = self.lib.create_transport(pjsua.TransportType.TCP)

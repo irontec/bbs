@@ -45,3 +45,4 @@ class Settings(object):
         self.keepon = False
         self.transport = None
         self.exclusive = False
+        self.stdcodecs = False

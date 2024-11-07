@@ -92,6 +92,9 @@ def main(argv=None):
                         help="Force UDP/TCP/TLS for all transactions")
     parser.add_argument("-x", "--exclusive", dest="exclusive", default=False, action="store_true",
                         help="Create a new transport for each agent")
+    parser.add_argument("-s", "--stdcodecs", dest="stdcodecs", default=False, action="store_true",
+                        help="Only use PCMA and PCMU codecs")
+
     # process options
     args = parser.parse_args(argv)
 
@@ -106,6 +109,7 @@ def main(argv=None):
     settings.keepon = args.keepon
     settings.transport = args.transport
     settings.exclusive = args.exclusive
+    settings.stdcodecs = args.stdcodecs
 
     # read environment configuration
     config_files = []
