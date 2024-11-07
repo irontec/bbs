@@ -90,7 +90,8 @@ def main(argv=None):
                         help="do not stop on first failed scenario")
     parser.add_argument("-t", "--transport", choices=['udp', 'tcp', 'tls'], dest="transport",
                         help="Force UDP/TCP/TLS for all transactions")
-
+    parser.add_argument("-x", "--exclusive", dest="exclusive", default=False, action="store_true",
+                        help="Create a new transport for each agent")
     # process options
     args = parser.parse_args(argv)
 
@@ -104,6 +105,7 @@ def main(argv=None):
     settings.nameserver = args.nameserver
     settings.keepon = args.keepon
     settings.transport = args.transport
+    settings.exclusive = args.exclusive
 
     # read environment configuration
     config_files = []

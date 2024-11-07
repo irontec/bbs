@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import pjsua
+from bbs.settings import Settings
 from pjsua import Lib, AccountConfig, AccountCallback
 
 class Credentials(AccountCallback):
@@ -33,4 +35,6 @@ class Credentials(AccountCallback):
     def get_account(self):
         acc_cfg = AccountConfig(self.domain, self.username, self.password)
         acc_cfg.reg_uri = None
+        if Settings().exclusive:
+            acc_cfg.transport_id = Lib.instance().create_transport(pjsua.TransportType.UDP)._id
         return Lib.instance().create_account(acc_cfg, False, self)

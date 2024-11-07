@@ -44,3 +44,4 @@ class Settings(object):
         self.nameserver = None
         self.keepon = False
         self.transport = None
+        self.exclusive = False

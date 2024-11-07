@@ -16,6 +16,7 @@
 #
 
 import re
+import pjsua
 from pjsua import Lib, AccountConfig, AccountCallback, SIPUri
 from bbs.steps.step import Step
 from bbs.settings import Settings
@@ -80,5 +81,7 @@ class RegisterStep(Step, AccountCallback):
         if self.transport:
             self.domain += ';transport={}'.format(self.transport)
         acc_cfg = AccountConfig(self.domain, self.username, self.password)
+        if Settings().exclusive:
+            acc_cfg.transport_id = Lib.instance().create_transport(pjsua.TransportType.UDP)._id
         self.session.account = Lib.instance().create_account(acc_cfg, False, self)
         self.wait_status()
