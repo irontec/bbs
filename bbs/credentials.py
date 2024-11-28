@@ -16,7 +16,9 @@
 #
 
 import pjsua
+from clint.textui import colored
 from bbs.settings import Settings
+from bbs.pjlib import PJLib
 from pjsua import Lib, AccountConfig, AccountCallback
 
 class Credentials(AccountCallback):
@@ -36,5 +38,5 @@ class Credentials(AccountCallback):
         acc_cfg = AccountConfig(self.domain, self.username, self.password)
         acc_cfg.reg_uri = None
         if Settings().exclusive:
-            acc_cfg.transport_id = Lib.instance().create_transport(pjsua.TransportType.UDP)._id
-        return Lib.instance().create_account(acc_cfg, False, self)
+            acc_cfg.transport_id = PJLib().lib.create_transport(pjsua.TransportType.UDP)._id
+        return PJLib().lib.create_account(acc_cfg, False, self)
