@@ -94,7 +94,8 @@ def main(argv=None):
                         help="Create a new transport for each agent")
     parser.add_argument("-s", "--stdcodecs", dest="stdcodecs", default=False, action="store_true",
                         help="Only use PCMA and PCMU codecs")
-
+    parser.add_argument("-l", "--listen", dest="listen",
+                        help="Use given IP address as external IP on listen steps")
     # process options
     args = parser.parse_args(argv)
 
@@ -110,6 +111,7 @@ def main(argv=None):
     settings.transport = args.transport
     settings.exclusive = args.exclusive
     settings.stdcodecs = args.stdcodecs
+    settings.listen = args.listen
 
     # read environment configuration
     config_files = []

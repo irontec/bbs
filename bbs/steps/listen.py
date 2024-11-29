@@ -29,7 +29,7 @@ class ListenStep(Step, AccountCallback):
     def __init__(self):
         self.address = "0.0.0.0"
         self.port = 5060
-        self.externip = None
+        self.externip = Settings().listen
         self.transport = pjsua.TransportType.UDP
         Step.__init__(self)
         AccountCallback.__init__(self)
