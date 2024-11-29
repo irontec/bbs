@@ -75,7 +75,7 @@ class ListenStep(Step, AccountCallback):
         manager.on_state()
 
     def run(self):
-        self.log("-- [%s] Running %s for transport %s:%d" % (self.session.name, self.__class__.__name__, self.address, self.port))
+        self.log("-- [%s] Running %s for transport %s:%d [%s]" % (self.session.name, self.__class__.__name__, self.address, self.port, self.externip))
         transport =  PJLib().lib.create_transport(pjsua.TransportType.UDP, pjsua.TransportConfig(self.port, self.address, self.externip))
         self.session.account =  PJLib().lib.create_account_for_transport(transport, True, self)
         self.succeeded()
