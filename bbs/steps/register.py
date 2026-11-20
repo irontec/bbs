@@ -15,10 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import re
 import pjsua
-from pjsua import Lib, AccountConfig, AccountCallback, SIPUri
+from pjsua import Lib, AccountConfig, AccountCallback
 from bbs.steps.step import Step
+from bbs.incoming import parse_incoming_call
 from bbs.settings import Settings
 from bbs.pjlib import PJLib
 
@@ -62,18 +62,8 @@ class RegisterStep(Step, AccountCallback):
         # Let the manager handle this call events
         manager = self.session.get_manager()
         call.set_callback(manager)
-        call.pai_name = None
-        call.pai = None
-        call.diversion = None
-        # Get callerid name and number from incoming call
-        match = re.search("P-Asserted-Identity: (?:\"([^\"]+)\" )?<(.*)>\r\n", str(rdata.msg_info_buffer))
-        if match:
-            call.pai_name = match.group(1)
-            call.pai = SIPUri(match.group(2))
-        # Get diversion.num from incoming call
-        match = re.search("Diversion:[^\n]*<(.*)>[^\n]*\r\n", str(rdata.msg_info_buffer))
-        if match:
-            call.diversion = SIPUri(match.group(1))
+        # Get caller information headers from incoming call
+        parse_incoming_call(call, rdata)
         # Notify incoming event state
         manager.on_state()
 
