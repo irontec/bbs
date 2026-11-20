@@ -36,4 +36,5 @@ __all__ = [
     'wait',
     'waitfor',
     'listen',
+    'paidomain',
 ]
