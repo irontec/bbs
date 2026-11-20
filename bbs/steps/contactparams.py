@@ -30,7 +30,7 @@ class ContactParamsStep(Step):
     def run(self):
         self.log("-- [%s] Checking Contact uri ends with %s " % (self.session.name, self.expected))
         call = self.session.get_call()
-        if call and getattr(call, 'contact_uri', None) and call.contact_uri.endswith(self.expected):
+        if self.expected and call and getattr(call, 'contact_uri', None) and call.contact_uri.endswith(self.expected):
             self.succeeded()
             return
 
