@@ -37,4 +37,5 @@ __all__ = [
     'waitfor',
     'listen',
     'paidomain',
+    'fromdomain',
 ]

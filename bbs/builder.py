@@ -45,6 +45,7 @@ class StepBuilder(object):
             'attxfer': attxfer.AttXferStep(),
             'listen': listen.ListenStep(),
             'paidomain': paidomain.PaiDomainStep(),
+            'fromdomain': fromdomain.FromDomainStep(),
         }
 
         if name.lower() in steps:
