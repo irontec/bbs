@@ -29,6 +29,7 @@ class CallStep(Step):
         self.dest = None
         self.name = None
         self.caller = None
+        self.callername = None
         self.diversion = []
         self.hdrs = []
         self.transport = None
@@ -52,6 +53,8 @@ class CallStep(Step):
                 self.dest = str(params['dest'])
             if 'caller' in params:
                 self.caller = str(params['caller'])
+            if 'callername' in params:
+                self.callername = str(params['callername'])
             if 'diversion' in params:
                 self.diversion = params['diversion']
             if 'transport' in params and not forced_transport:
@@ -71,10 +74,13 @@ class CallStep(Step):
 
         return final_uri
 
-    def add_header(self, hdr_name, hdr_uri):
-        """Add SIP header with a given URI"""
+    def add_header(self, hdr_name, hdr_uri, display_name=None):
+        """Add SIP header with a given URI and optional display name"""
         uri = self.create_uri(hdr_uri)
-        hdr = (hdr_name, "<{}>".format(uri))
+        value = "<{}>".format(uri)
+        if display_name:
+            value = '"{}" {}'.format(display_name, value)
+        hdr = (hdr_name, value)
         self.log("-- [{}] Adding {} header: '{}'".format(self.session.name, hdr[0], hdr[1]))
         self.hdrs.append(hdr)
 
@@ -97,7 +103,7 @@ class CallStep(Step):
 
             # P-Asserted-Identity
             if self.caller:
-                self.add_header("P-Asserted-Identity", self.caller)
+                self.add_header("P-Asserted-Identity", self.caller, self.callername)
 
             # Diversion header(s)
             for div in self.diversion:
