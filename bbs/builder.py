@@ -46,6 +46,7 @@ class StepBuilder(object):
             'listen': listen.ListenStep(),
             'paidomain': paidomain.PaiDomainStep(),
             'fromdomain': fromdomain.FromDomainStep(),
+            'fromuser': fromuser.FromUserStep(),
             'nopai': nopai.NoPaiStep(),
         }
 
