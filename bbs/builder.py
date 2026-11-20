@@ -46,6 +46,7 @@ class StepBuilder(object):
             'listen': listen.ListenStep(),
             'paidomain': paidomain.PaiDomainStep(),
             'fromdomain': fromdomain.FromDomainStep(),
+            'nopai': nopai.NoPaiStep(),
         }
 
         if name.lower() in steps:

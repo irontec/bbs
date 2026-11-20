@@ -38,4 +38,5 @@ __all__ = [
     'listen',
     'paidomain',
     'fromdomain',
+    'nopai',
 ]
