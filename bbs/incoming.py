@@ -43,6 +43,12 @@ def uri_host(uri):
     return match.group(1).lower()
 
 
+def uri_param_names(uri):
+    """Return the lowercase names of the parameters of a sip/sips uri"""
+    params = uri.strip().split('?', 1)[0].split(';')[1:]
+    return [param.split('=', 1)[0].strip().lower() for param in params if param.strip()]
+
+
 def parse_incoming_call(call, rdata):
     """Store caller information headers of an incoming INVITE in the call"""
     from pjsua import SIPUri
@@ -55,6 +61,7 @@ def parse_incoming_call(call, rdata):
     call.from_uri = None
     call.from_host = None
     call.diversion = None
+    call.contact_uri = None
 
     # Get callerid name and number from incoming call
     pai = parse_name_addr_header(msg, ["P-Asserted-Identity"])
@@ -68,6 +75,11 @@ def parse_incoming_call(call, rdata):
     if fromhdr:
         call.from_uri = SIPUri(fromhdr[1])
         call.from_host = uri_host(fromhdr[1])
+
+    # Get Contact uri (without header params) from incoming call
+    contact = parse_name_addr_header(msg, ["Contact", "m"])
+    if contact:
+        call.contact_uri = contact[1]
 
     # Get diversion.num from incoming call
     match = re.search("Diversion:[^\n]*<(.*)>[^\n]*\r\n", msg)

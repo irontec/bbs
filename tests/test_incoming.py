@@ -17,7 +17,7 @@
 
 import unittest
 
-from bbs.incoming import parse_name_addr_header, uri_host
+from bbs.incoming import parse_name_addr_header, uri_host, uri_param_names
 
 
 def message(*headers):
@@ -88,6 +88,24 @@ class UriHostTest(unittest.TestCase):
 
     def test_tel_uri_has_no_host(self):
         self.assertIsNone(uri_host("tel:+34600111222"))
+
+    def test_contact_keeps_uri_params_inside_brackets(self):
+        msg = message("Contact: \"Dave\" <sip:dave@10.0.0.1:5060;ob;first=uno>;expires=3600")
+        self.assertEqual(parse_name_addr_header(msg, ["Contact", "m"]),
+                         ("Dave", "sip:dave@10.0.0.1:5060;ob;first=uno"))
+
+
+class UriParamNamesTest(unittest.TestCase):
+
+    def test_uri_without_params(self):
+        self.assertEqual(uri_param_names("sip:dave@10.0.0.1:5060"), [])
+
+    def test_params_with_and_without_value(self):
+        self.assertEqual(uri_param_names("sip:dave@10.0.0.1:5060;ob;First=uno;second=dos"),
+                         ["ob", "first", "second"])
+
+    def test_uri_headers_are_not_params(self):
+        self.assertEqual(uri_param_names("sip:dave@10.0.0.1;lr?subject=first"), ["lr"])
 
 
 if __name__ == '__main__':

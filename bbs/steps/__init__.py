@@ -40,4 +40,6 @@ __all__ = [
     'fromdomain',
     'fromuser',
     'nopai',
+    'contactparams',
+    'nocontactparam',
 ]

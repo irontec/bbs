@@ -48,6 +48,8 @@ class StepBuilder(object):
             'fromdomain': fromdomain.FromDomainStep(),
             'fromuser': fromuser.FromUserStep(),
             'nopai': nopai.NoPaiStep(),
+            'contactparams': contactparams.ContactParamsStep(),
+            'nocontactparam': nocontactparam.NoContactParamStep(),
         }
 
         if name.lower() in steps:
